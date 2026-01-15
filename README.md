@@ -1,171 +1,83 @@
-# EPCIS-VET
-# Veterinary-Aware EPCIS Traceability Experiments
+# Experimental Code for the Paper
 
-This repository contains the experimental code and synthetic data generators used in the paper:
+This repository contains **only the two Python scripts** used to produce the experimental results reported in the paper:
 
 **Integrating veterinary public health data into EPCIS-based digital traceability for dairy supply chains**  
-Stavroula Chatzinikolaou, Giannis Vassiliou, Nikos Papadakis  
-(submitted to / published in *Computers and Electronics in Agriculture*)
+Stavroula Chatzinikolaou, Giannis Vassiliou, Nikos Papadakis
 
-The code enables full reproduction of the synthetic evaluations reported in the paper, including:
-- Risk propagation across milk → cheese transformation events
-- Regulatory compliance checking
-- Quantitative recall-scope reduction under delayed contamination detection
+No additional framework, libraries, datasets, or supporting scripts are included.
 
 ---
 
-## Repository Structure
+## Repository Contents
 
 ```
 .
-├── data_generation/
-│   ├── generate_supply_chain.py     # Synthetic dairy supply-chain generator
-│   ├── inject_contamination.py      # Delayed contamination and risk injection
-│
-├── experiments/
-│   ├── recall_simulation.py         # Baseline vs trace-forward recall strategies
-│   ├── metrics.py                   # Precision, recall, scope-reduction metrics
-│
-├── config/
-│   └── parameters.yaml              # Experimental parameters (W, k, prevalence)
-│
-├── outputs/
-│   ├── sample_results.csv           # Example output (non-authoritative)
-│
-├── requirements.txt
-├── README.md
-└── LICENSE
+├── functional.py
+├── recall_experiment.py
+└── README.md
 ```
 
 ---
 
-## Experimental Scope
+## Experiment 1 – Functional Validation (`functional.py`)
 
-The experiments are **synthetic but process-consistent**, designed to reflect realistic
-dairy production and traceability constraints while enabling controlled validation.
+This script implements the **functional validation** described in **Section 5.1** of the paper.
 
-They correspond directly to:
+It demonstrates, using synthetic data:
 
-- **Section 5.1** – Functional validation (risk propagation, traceability completeness, compliance checking)
-- **Section 5.2** – Quantitative evaluation of recall-scope reduction (Tables 2–6)
+- Propagation of veterinary zoonosis risk from milk batches to derived cheese batches
+- End-to-end traceability (Cheese → Milk → Farm) using RDF/SPARQL queries
+- Automatic detection of a missing mandatory quality-testing event
+- Measurement of SQL-to-RDF translation latency under incremental updates
 
-No real farm, veterinary, or commercial data are used.
+All data are generated internally by the script or inserted programmatically.
+No external datasets are required.
 
----
-
-## Requirements
-
-- Python ≥ 3.9  
-- Tested on Linux and macOS
-
-Install dependencies with:
-
+Run:
 ```bash
-pip install -r requirements.txt
+python functional.py
 ```
+
+(Requires a local PostgreSQL instance and the Python dependencies used in the script.)
 
 ---
 
-## Reproducing the Experiments
+## Experiment 2 – Recall-Scope Reduction (`recall_experiment.py`)
 
-### 1. Generate the synthetic supply-chain dataset
+This script implements the **quantitative recall-scope experiment** described in **Section 5.2** of the paper.
 
+It generates a synthetic cheese supply-chain dataset and compares:
+
+- A **baseline** time-window recall strategy (±W hours, same processing line)
+- A **proposed** trace-forward recall strategy based on explicit batch derivation
+
+The script outputs CSV files with recall scope, precision, recall, and scope-reduction metrics,
+reproducing **Table 6** in the paper (up to stochastic variation).
+
+Run:
 ```bash
-python data_generation/generate_supply_chain.py   --config config/parameters.yaml   --output data/
+python recall_experiment.py --seed 7 --mixing_k 4 --W 24 --outdir outputs
 ```
 
-This step creates:
-- Dairy farms
-- Milk lots
-- Cheese batches
-- Transformation relationships
-- Packaged distribution units
+---
 
-A fixed random seed is used to ensure reproducibility.
+## Reproducibility
+
+- Both scripts rely exclusively on **synthetic, process-consistent data**
+- Random seeds are configurable via command-line arguments
+- No real farm, veterinary, or commercial data are used
+
+The code is intentionally minimal and corresponds **one-to-one** with the experiments reported in the manuscript.
 
 ---
 
-### 2. Inject delayed contamination events
+## Citation
 
-```bash
-python data_generation/inject_contamination.py   --input data/   --output data/
-```
-
-This simulates:
-- Low-prevalence contamination
-- Laboratory confirmation delays (7–14 days)
-- Assignment of zoonotic risk levels
-
----
-
-### 3. Run recall-scope experiments
-
-```bash
-python experiments/recall_simulation.py   --input data/   --config config/parameters.yaml   --output results/
-```
-
-This evaluates:
-- Baseline time-window recall strategy
-- Proposed EPCIS trace-forward recall strategy
-
----
-
-### 4. Compute evaluation metrics
-
-```bash
-python experiments/metrics.py   --input results/   --output results/summary.csv
-```
-
-The output reproduces:
-- Recall scope
-- Precision and recall
-- Recall-scope reduction percentages
-
-Values correspond to **Table 6** in the paper (subject to floating-point variation).
-
----
-
-## Configuration Parameters
-
-Key parameters are defined in `config/parameters.yaml`, including:
-
-- `W`: Time-window size (hours) for baseline recalls
-- `k`: Number of milk lots per cheese batch
-- `prevalence`: Contamination prevalence
-- `production_days`
-- `random_seed`
-
-Changing these values allows sensitivity analysis while preserving the experimental logic.
-
----
-
-## Notes on EPCIS and Semantics
-
-This repository focuses on **experimental evaluation logic** rather than full EPCIS event repositories.
-
-- EPCIS concepts (ObjectEvents, TransformationEvents, dispositions) are represented abstractly
-- Semantic reasoning is emulated through deterministic propagation rules consistent with the paper
-- Full EPCIS payload examples and schemas are provided in the paper’s Supplementary Material
-
----
-
-## Reproducibility and Citation
-
-If you use this code or adapt it for further research, please cite the associated paper.
-
-A Zenodo DOI will be added upon publication.
+If you use or adapt this code, please cite the associated paper.
 
 ---
 
 ## License
 
-This project is released under the MIT License.
-
----
-
-## Contact
-
-For questions or issues related to this repository, please contact:
-
-- Giannis Vassiliou – vassil@hmu.gr  
-- Nikos Papadakis – npapadak@hmu.gr
+MIT License
