@@ -95,10 +95,6 @@ Outputs CSV files containing recall scope and precision metrics.
 
 ---
 
-## Citation
-
-If you use or adapt this code, please cite the associated paper.
-
 ---
 
 ## License
