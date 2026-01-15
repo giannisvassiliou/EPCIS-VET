@@ -25,21 +25,7 @@ README.md
 
 ---
 
-## Required Python Libraries
 
-### Standard library modules (included with Python)
-
-These require **no installation**:
-- `json`
-- `time`
-- `random`
-- `statistics`
-- `typing`
-- `argparse`
-- `os`
-- `datetime`
-
----
 
 ### Third‑party Python libraries
 
