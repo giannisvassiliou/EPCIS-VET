@@ -1,74 +1,111 @@
-# Experimental Code for the Paper
+# Code for the Paper Experiments
 
-This repository contains **only the two Python scripts** used to produce the experimental results reported in the paper:
+This repository contains **only two Python scripts**, implementing the **two experiments** reported in the paper:
 
 **Integrating veterinary public health data into EPCIS-based digital traceability for dairy supply chains**  
 Stavroula Chatzinikolaou, Giannis Vassiliou, Nikos Papadakis
 
-No additional framework, libraries, datasets, or supporting scripts are included.
+There is **no other code** in this repository.
 
 ---
 
-## Repository Contents
+## Files in this repository
 
 ```
-.
-├── functional.py
-├── recall_experiment.py
-└── README.md
+functional.py
+recall_experiment.py
+README.md
 ```
 
 ---
 
-## Experiment 1 – Functional Validation (`functional.py`)
+## Python Version
 
-This script implements the **functional validation** described in **Section 5.1** of the paper.
+- Python **3.9 or newer**
 
-It demonstrates, using synthetic data:
+---
 
-- Propagation of veterinary zoonosis risk from milk batches to derived cheese batches
-- End-to-end traceability (Cheese → Milk → Farm) using RDF/SPARQL queries
-- Automatic detection of a missing mandatory quality-testing event
-- Measurement of SQL-to-RDF translation latency under incremental updates
+## Required Python Libraries
 
-All data are generated internally by the script or inserted programmatically.
-No external datasets are required.
+### Standard library modules (included with Python)
+
+These require **no installation**:
+- `json`
+- `time`
+- `random`
+- `statistics`
+- `typing`
+- `argparse`
+- `os`
+- `datetime`
+
+---
+
+### Third‑party Python libraries
+
+These **must be installed separately**:
+
+#### Used by `functional.py`
+- `psycopg2` (PostgreSQL client library)
+- `rdflib` (RDF graphs and SPARQL queries)
+
+#### Used by `recall_experiment.py`
+- `numpy`
+- `pandas`
+
+Install all required libraries with:
+
+```bash
+pip install psycopg2-binary rdflib numpy pandas
+```
+
+---
+
+## External Software
+
+- **PostgreSQL** (required only for `functional.py`)
+  - Used to emulate incremental ingestion via `LISTEN / NOTIFY`
+  - Connection string is defined inside the script and may be adjusted
+
+---
+
+## 1) Functional Validation Experiment (`functional.py`)
+
+Implements the functional checks described in the manuscript (Section 5.1):
+
+- Risk propagation from milk lots to derived cheese batches
+- End‑to‑end traceability queries (Cheese → Milk → Farm)
+- Automatic detection of a missing mandatory quality‑testing event
+- Measurement of SQL‑to‑RDF translation latency
 
 Run:
 ```bash
 python functional.py
 ```
 
-(Requires a local PostgreSQL instance and the Python dependencies used in the script.)
-
 ---
 
-## Experiment 2 – Recall-Scope Reduction (`recall_experiment.py`)
+## 2) Recall‑Scope Reduction Experiment (`recall_experiment.py`)
 
-This script implements the **quantitative recall-scope experiment** described in **Section 5.2** of the paper.
+Implements the quantitative recall experiment described in Section 5.2:
 
-It generates a synthetic cheese supply-chain dataset and compares:
+- **Baseline**: line‑level time‑window recall (±W hours)
+- **Proposed**: trace‑forward recall using explicit batch derivation
 
-- A **baseline** time-window recall strategy (±W hours, same processing line)
-- A **proposed** trace-forward recall strategy based on explicit batch derivation
-
-The script outputs CSV files with recall scope, precision, recall, and scope-reduction metrics,
-reproducing **Table 6** in the paper (up to stochastic variation).
-
-Run:
+Run (example):
 ```bash
 python recall_experiment.py --seed 7 --mixing_k 4 --W 24 --outdir outputs
 ```
+
+Outputs CSV files containing recall scope and precision metrics.
 
 ---
 
 ## Reproducibility
 
-- Both scripts rely exclusively on **synthetic, process-consistent data**
-- Random seeds are configurable via command-line arguments
+- All data are **synthetic**
+- Random seeds are configurable
 - No real farm, veterinary, or commercial data are used
-
-The code is intentionally minimal and corresponds **one-to-one** with the experiments reported in the manuscript.
 
 ---
 
