@@ -1,11 +1,11 @@
 # Experimental Code for the Paper
 
-This repository contains  the two Python scripts** used to produce the experimental results reported in the paper:
+This repository contains **only the two Python scripts** used to produce the experimental results reported in the paper:
 
 **Integrating veterinary public health data into EPCIS-based digital traceability for dairy supply chains**  
 Stavroula Chatzinikolaou, Giannis Vassiliou, Nikos Papadakis
 
-No additional framework, libraries, datasets, or supporting scripts are needed
+No additional framework, libraries, datasets, or supporting scripts are included.
 
 ---
 
