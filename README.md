@@ -10,9 +10,6 @@ A representative cheese supply-chain use case and a synthetic evaluation demonst
 
 This repository contains  **two Python scripts**, implementing the **two experiments** reported in the paper:
 
-**Integrating veterinary public health data into EPCIS-based digital traceability for dairy supply chains**  
-Stavroula Chatzinikolaou, Giannis Vassiliou, Nikos Papadakis
-
 There is **no other code** in this repository.
 
 ---
